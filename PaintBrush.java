@@ -1,4 +1,3 @@
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Graphics;
@@ -11,23 +10,33 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-
-// PaintBrush class
+/**
+ * A simple paint application that allows users to draw shapes and freehand drawings on a canvas.
+ * This class extends `JPanel` and implements `MouseMotionListener` and `MouseListener` to handle
+ * user interactions. It supports drawing shapes like lines, ovals, rectangles, triangles, and
+ * freehand drawings, as well as an eraser tool and color selection.
+ */
 public class PaintBrush extends JPanel implements MouseMotionListener, MouseListener {
 
-    private int lastX, lastY;
-    private Shape currentShape;
-    private List<Shape> shapes;
-    private String selectedShapeType = "Freehand";
-    private Color selectedColor = Color.BLACK;
-    private boolean eraserMode = false;
-    private boolean fillMode = false;
+    @SuppressWarnings("unused")
+    private int lastX; // Stores the last mouse coordinates
+    @SuppressWarnings("unused")
+    private int lastY; // Stores the last mouse coordinates
+    private Shape currentShape; // The shape currently being drawn
+    private List<Shape> shapes; // List of all shapes drawn on the canvas
+    private String selectedShapeType = "Freehand"; // The currently selected shape type
+    private Color selectedColor = Color.BLACK; // The currently selected color
+    private boolean eraserMode = false; // Whether the eraser tool is active
+    private boolean fillMode = false; // Whether shapes should be filled
 
+    /**
+     * Constructor for the PaintBrush class.
+     * Initializes the canvas, sets up the UI components (buttons for shapes, colors, etc.),
+     * and configures mouse listeners for drawing.
+     */
     public PaintBrush() {
         shapes = new ArrayList<>();
         setBackground(Color.WHITE);
-        addMouseMotionListener(this);
-        addMouseListener(this);
 
         // Create buttons for shape selection
         JButton freehandButton = new JButton("Freehand");
@@ -116,11 +125,27 @@ public class PaintBrush extends JPanel implements MouseMotionListener, MouseList
         JFrame frame = new JFrame("Simple Paint Brush");
         frame.add(buttonPanel, BorderLayout.NORTH);
         frame.add(this, BorderLayout.CENTER);
-        frame.setSize(800, 600);
+        frame.setSize(1000, 600);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+        initializeListeners();
     }
 
+    /**
+     * Initializes the mouse listeners for the canvas.
+     * This method adds the `MouseMotionListener` and `MouseListener` to the panel.
+     */
+    private void initializeListeners() {
+        addMouseMotionListener(this);
+        addMouseListener(this);
+    }
+
+    /**
+     * Overrides the `paintComponent` method to render all shapes on the canvas.
+     * This method is called automatically whenever the panel needs to be repainted.
+     *
+     * @param g The Graphics object used for drawing.
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -132,45 +157,67 @@ public class PaintBrush extends JPanel implements MouseMotionListener, MouseList
         }
     }
 
+    /**
+     * Handles mouse drag events for drawing shapes and using the eraser.
+     * This method is called when the mouse is dragged across the canvas.
+     *
+     * @param e The MouseEvent object containing details about the event.
+     */
     @Override
-public void mouseDragged(MouseEvent e) {
-    if (eraserMode) {
-        // Draw a white rectangle at the mouse position
-        int eraserSize = 20;
-        Graphics g = getGraphics();
-        g.setColor(Color.WHITE); // Set color to white
-        g.fillRect(e.getX() - eraserSize / 2, e.getY() - eraserSize / 2, eraserSize, eraserSize);
-        g.dispose();
-    } else {
-        if (selectedShapeType.equals("Freehand")) {
+    public void mouseDragged(MouseEvent e) {
+        if (eraserMode) {
             if (currentShape == null) {
-                currentShape = new Freehand(selectedColor);
+                currentShape = new Eraser();
             }
-            ((Freehand) currentShape).addPoint(e.getX(), e.getY());
+            ((Eraser) currentShape).addPoint(e.getX(), e.getY());
             repaint();
         } else {
-            if (currentShape == null) {
-                return;
+            if (selectedShapeType.equals("Freehand")) {
+                if (currentShape == null) {
+                    currentShape = new Freehand(selectedColor);
+                }
+                ((Freehand) currentShape).addPoint(e.getX(), e.getY());
+                repaint();
+            } else {
+                if (currentShape == null) {
+                    return;
+                }
+                currentShape.x2 = e.getX();
+                currentShape.y2 = e.getY();
+                repaint();
             }
-            currentShape.x2 = e.getX();
-            currentShape.y2 = e.getY();
-            repaint();
         }
     }
-}
 
-
+    /**
+     * Handles mouse move events.
+     * This method is called when the mouse is moved across the canvas.
+     *
+     * @param e The MouseEvent object containing details about the event.
+     */
     @Override
     public void mouseMoved(MouseEvent e) {
         lastX = e.getX();
         lastY = e.getY();
     }
 
+    /**
+     * Handles mouse click events.
+     * This method is called when the mouse is clicked on the canvas.
+     *
+     * @param e The MouseEvent object containing details about the event.
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
         // Not used
     }
 
+    /**
+     * Handles mouse press events.
+     * This method is called when the mouse button is pressed on the canvas.
+     *
+     * @param e The MouseEvent object containing details about the event.
+     */
     @Override
     public void mousePressed(MouseEvent e) {
         if (!eraserMode) {
@@ -178,41 +225,74 @@ public void mouseDragged(MouseEvent e) {
         }
     }
 
+    /**
+     * Handles mouse release events.
+     * This method is called when the mouse button is released on the canvas.
+     *
+     * @param e The MouseEvent object containing details about the event.
+     */
     @Override
     public void mouseReleased(MouseEvent e) {
         if (!eraserMode) {
             finalizeShape();
+        } else {
+            if (currentShape != null) {
+                shapes.add(currentShape);
+                currentShape = null;
+            }
         }
     }
 
+    /**
+     * Handles mouse enter events.
+     * This method is called when the mouse enters the canvas.
+     *
+     * @param e The MouseEvent object containing details about the event.
+     */
     @Override
     public void mouseEntered(MouseEvent e) {
         // Not used
     }
 
+    /**
+     * Handles mouse exit events.
+     * This method is called when the mouse exits the canvas.
+     *
+     * @param e The MouseEvent object containing details about the event.
+     */
     @Override
     public void mouseExited(MouseEvent e) {
         // Not used
     }
 
+    /**
+     * Initializes a new shape based on the selected shape type.
+     * This method is called when the mouse is pressed to start drawing a shape.
+     *
+     * @param x The x-coordinate of the starting point.
+     * @param y The y-coordinate of the starting point.
+     */
     public void startShape(int x, int y) {
-        if (selectedShapeType.equals("Oval")) {
-            currentShape = new Oval(x, y, x, y, selectedColor, fillMode);
-        } else if (selectedShapeType.equals("Rectangle")) {
-            currentShape = new Rectangle(x, y, x, y, selectedColor, fillMode);
-        } else if (selectedShapeType.equals("Triangle")) {
-            currentShape = new Triangle(x, y, x, y, selectedColor, fillMode);
-        } else if (selectedShapeType.equals("Line")) {
-            currentShape = new Shape(x, y, x, y, selectedColor, false) {
-                @Override
-                public void draw(Graphics g) {
-                    g.setColor(color);
-                    g.drawLine(x1, y1, x2, y2);
-                }
-            };
+        switch (selectedShapeType) {
+            case "Oval" -> currentShape = new Oval(x, y, x, y, selectedColor, fillMode);
+            case "Rectangle" -> currentShape = new Rectangle(x, y, x, y, selectedColor, fillMode);
+            case "Triangle" -> currentShape = new Triangle(x, y, x, y, selectedColor, fillMode);
+            case "Line" -> currentShape = new Shape(x, y, x, y, selectedColor, false) {
+                    @Override
+                    public void draw(Graphics g) {
+                        g.setColor(color);
+                        g.drawLine(x1, y1, x2, y2);
+                    }
+                };
+            default -> {
+            }
         }
     }
 
+    /**
+     * Finalizes the current shape and adds it to the list of shapes.
+     * This method is called when the mouse is released after drawing a shape.
+     */
     public void finalizeShape() {
         if (currentShape != null) {
             shapes.add(currentShape);
@@ -220,7 +300,13 @@ public void mouseDragged(MouseEvent e) {
         }
     }
 
+    /**
+     * The main method to launch the PaintBrush application.
+     *
+     * @param args Command-line arguments (not used).
+     */
     public static void main(String[] args) {
-        new PaintBrush();
+        @SuppressWarnings("unused")
+        PaintBrush paintBrush = new PaintBrush();
     }
 }
