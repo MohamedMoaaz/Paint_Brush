@@ -8,7 +8,7 @@ import java.awt.Graphics;
  * It defines common properties such as position, color, and fill status, and requires
  * subclasses to implement the `draw` method to render the shape.
  */
-abstract class Shape {
+public abstract class Shape {
     protected int x1, y1, x2, y2; // Coordinates of the shape's bounding box
     protected Color color; // Color of the shape
     protected boolean filled; // Whether the shape is filled or outlined
