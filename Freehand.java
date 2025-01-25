@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A class representing a freehand drawing tool.
@@ -10,7 +9,8 @@ import java.util.List;
  * It collects points as the user drags the mouse and connects them with lines to create a freehand drawing.
  */
 public class Freehand extends Shape {
-    private final List<Point> points; // List of points to store the freehand drawing path
+    private final ArrayList<Point> points; // List of points to store the freehand drawing path
+    
 
     /**
      * Constructor for the Freehand class.
