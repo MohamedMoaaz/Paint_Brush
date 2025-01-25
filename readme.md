@@ -1,151 +1,103 @@
 Simple Paint Brush Application
-
 Overview
-
-This project is a simple paintbrush application built using Java Swing. It allows users to draw shapes, select colors, adjust brush sizes, and clear the canvas. The application is designed with an object-oriented approach and utilizes a modular structure for scalability.
-
-UML Class Diagram
-
-1. Class: PaintApp
-
-Description: The main class to initialize the application.
-
-Methods:
-
-main(String[] args): Entry point of the application.
-
-initialize(): Sets up the frame and panel.
-
-2. Class: PaintCanvas
-
-Description: Extends JPanel and serves as the drawing area.
-
-Attributes:
-
-ArrayList<Shape> shapes: Stores all the drawn shapes.
-
-Color currentColor: The current color of the brush.
-
-int brushSize: The size of the brush.
-
-Shape currentShape: The shape currently being drawn.
-
-Methods:
-
-paintComponent(Graphics g): Renders the shapes.
-
-setColor(Color color): Sets the current drawing color.
-
-setBrushSize(int size): Sets the brush size.
-
-addShape(Shape shape): Adds a shape to the canvas.
-
-3. Class: ToolBar
-
-Description: A toolbar for selecting colors, shapes, and brush sizes.
-
-Attributes:
-
-JButton colorPickerButton
-
-JButton clearButton
-
-JComboBox<String> shapeSelector
-
-JSpinner brushSizeSpinner
-
-Methods:
-
-createToolBar(): Creates and initializes toolbar components.
-
-addActionListeners(): Adds listeners for the toolbar events.
-
-4. Interface: Shape
-
-Description: Represents a drawable shape.
-
-Methods:
-
-void draw(Graphics g): Draws the shape.
-
-5. Class: Circle (implements Shape)
-
-Attributes:
-
-int x, y, radius
-
-Color color
-
-Methods:
-
-draw(Graphics g): Draws the circle.
-
-6. Class: Rectangle (implements Shape)
-
-Attributes:
-
-int x, y, width, height
-
-Color color
-
-Methods:
-
-draw(Graphics g): Draws the rectangle.
-
-Relationships
-
-PaintApp contains PaintCanvas and ToolBar.
-
-PaintCanvas uses Shape.
-
-Circle and Rectangle implement Shape.
-
-ToolBar interacts with PaintCanvas to update its state (color, brush size, etc.).
-
-Example Interaction
-
-The user selects a color and brush size from the ToolBar.
-
-The user clicks and drags on the PaintCanvas to draw a Shape.
-
-The PaintCanvas updates the list of shapes and redraws them on the screen.
-
-The ToolBar's clear button clears the PaintCanvas.
+This is a simple paint brush application written in Java. It allows users to draw various shapes (freehand, line, oval, rectangle, triangle) and erase parts of the drawing using an eraser tool. The application provides a graphical user interface (GUI) where users can select different shapes, colors, and toggle fill mode for shapes.
 
 Features
+Shapes: Draw freehand lines, straight lines, ovals, rectangles, and triangles.
 
-Custom Shapes: Draw circles and rectangles.
+Colors: Choose from black, red, and blue for drawing shapes.
 
-Color Picker: Choose any color for your shapes.
+Fill Mode: Toggle between filled and outlined shapes.
 
-Adjustable Brush Size: Control the size of your brush.
+Eraser: Erase parts of the drawing by dragging the mouse.
 
-Clear Canvas: Erase all shapes with a single button.
+Clear Canvas: Clear the entire canvas with a single button click.
 
-How to Run
+How to Use
+Select a Shape: Click on one of the shape buttons (Freehand, Line, Oval, Rectangle, Triangle) to choose the shape you want to draw.
 
-Clone the repository:
+Select a Color: Click on one of the color buttons (Black, Red, Blue) to choose the drawing color.
 
-git clone <repository-url>
+Toggle Fill Mode: Check the "Fill" checkbox to draw filled shapes. Uncheck it to draw outlined shapes.
 
-Open the project in your preferred IDE.
+Draw: Click and drag the mouse on the canvas to draw the selected shape.
 
-Compile and run the PaintApp class.
+Erase: Click the "Eraser" button and drag the mouse to erase parts of the drawing.
 
-Future Enhancements
+Clear Canvas: Click the "Clear" button to remove all shapes from the canvas.
 
-Add more shapes (e.g., lines, polygons).
+Classes Overview
+Shape: Abstract base class for all shapes. Defines common properties like position, color, and fill status.
 
-Implement undo and redo functionality.
+Freehand: Represents a freehand drawing tool. Connects points with lines to create a freehand drawing.
 
-Save and load canvas as an image file.
+Line: Represents a straight line shape.
 
-Enhance UI with more styling options.
+Oval: Represents an oval shape. Can be filled or outlined.
 
-License
+Rectangle: Represents a rectangle shape. Can be filled or outlined.
 
-This project is open-source and available under the MIT License.
+Triangle: Represents a triangle shape. Can be filled or outlined.
 
-Acknowledgments
+Eraser: Represents an eraser tool. Draws white squares to simulate erasing.
 
-Inspired by basic drawing applications and Java Swing tutorials.
+PaintBrush: Main class that sets up the GUI and handles user interactions.
+
+UML Diagram
+Below is a simplified UML diagram representing the class relationships in the application:
+
++-------------------+       +-------------------+
+|     Shape         |       |    PaintBrush     |
+|-------------------|       |-------------------|
+| - x1, y1, x2, y2  |       | - currentShape    |
+| - color           |       | - shapes          |
+| - filled          |       | - selectedShapeType|
+|-------------------|       | - selectedColor   |
+| + draw(Graphics)  |       | - fillMode        |
++-------------------+       |-------------------|
+        ^                   | + main(String[])  |
+        |                   +-------------------+
+        |                           |
+        |                           |
++-------+-------+                   |
+|               |                   |
+|  Freehand     |                   |
+|---------------|                   |
+| - points      |                   |
+|---------------|                   |
+| + addPoint()  |                   |
+| + draw()      |                   |
++---------------+                   |
+                                    |
++-------------------+               |
+|     Oval          |               |
+|-------------------|               |
+| + draw()          |               |
++-------------------+               |
+                                    |
++-------------------+               |
+|   Rectangle       |               |
+|-------------------|               |
+| + draw()          |               |
++-------------------+               |
+                                    |
++-------------------+               |
+|   Triangle        |               |
+|-------------------|               |
+| + draw()          |               |
++-------------------+               |
+                                    |
++-------------------+               |
+|     Eraser        |               |
+|-------------------|               |
+| - points          |               |
+|-------------------|               |
+| + addPoint()      |               |
+| + draw()          |               |
++-------------------+               |
+                                    |
++-------------------+               |
+|     Line          |               |
+|-------------------|               |
+| + draw()          |               |
++-------------------+               |
