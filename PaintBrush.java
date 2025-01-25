@@ -73,10 +73,16 @@ public class PaintBrush extends JPanel {
             selectedColor = Color.BLUE;
         });
 
+        JButton greeButton = new JButton("Green");
+        greeButton.addActionListener(e -> {
+            selectedColor = Color.GREEN;
+        });
+
         // Create a checkbox for fill mode
         JCheckBox fillCheckBox = new JCheckBox("Fill");
         fillCheckBox.addActionListener(e -> {
-            fillMode = fillCheckBox.isSelected(); // Update fillMode based on checkbox state
+            // Update fillMode based on checkbox state
+            fillMode = fillCheckBox.isSelected(); 
         });
 
         // Create an eraser button
@@ -102,6 +108,7 @@ public class PaintBrush extends JPanel {
         buttonPanel.add(blackButton);
         buttonPanel.add(redButton);
         buttonPanel.add(blueButton);
+        buttonPanel.add(greeButton);
         buttonPanel.add(eraserButton);
         buttonPanel.add(clearButton);
         buttonPanel.add(fillCheckBox);
@@ -201,7 +208,7 @@ public class PaintBrush extends JPanel {
         // Create the main frame and customize it
         JFrame frame = new JFrame("Simple Paint Brush");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 600); // Set the size of the frame
+        frame.setSize(1050, 600); // Set the size of the frame
         frame.setLayout(new BorderLayout()); // Use BorderLayout for the frame
 
         // Add the PaintBrush panel to the center of the frame
