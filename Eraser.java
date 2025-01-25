@@ -2,7 +2,6 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A class representing an eraser tool.
@@ -10,8 +9,8 @@ import java.util.List;
  * white squares over existing shapes. The eraser collects points as it is dragged across
  * the canvas and draws white squares at those points to "erase" content.
  */
-class Eraser extends Shape {
-    private final List<Point> points; // Store points for eraser strokes
+public class Eraser extends Shape {
+    private final ArrayList<Point> points; // Store points for eraser strokes
 
     /**
      * Constructor for the Eraser class.
